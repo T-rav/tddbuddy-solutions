@@ -1,4 +1,4 @@
-# Mars rover in python 
+# Mars Rover #
 
 ### Installing Dependencies
 
