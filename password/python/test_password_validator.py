@@ -77,3 +77,19 @@ def test_given_password_missing_multiple_criteria_when_validate_then_returns_com
     # Assert
     expected_message = "Password must contain one uppercase letter, one number, one special character."
     assert result == expected_message
+
+def test_given_empty_password_when_validate_then_returns_all_error_messages():
+    # Arrange
+    validator = PasswordValidator()
+    password = ""
+    
+    # Act
+    result = validator.validate(password)
+    
+    # Assert
+    expected_message = (
+        "Password must contain at least 8 characters long, "
+        "one uppercase letter, one lowercase letter, one number, "
+        "one special character."
+    )
+    assert result == expected_message

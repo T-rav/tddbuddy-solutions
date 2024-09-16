@@ -62,3 +62,14 @@ class AuthenticationService:
             salt,
             100000
         )
+    
+    def are_valid_user_credentials(self, username, password):
+        if not username or not password:
+            return False
+
+        user = self.user_repository.get_user_by_username(username)
+        if not user or not user.password_salt or not user.password_hash:
+            return False
+
+        password_hash = self._hash_password(password, user.password_salt)
+        return hmac.compare_digest(password_hash, user.password_hash)
