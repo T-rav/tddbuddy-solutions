@@ -17,17 +17,17 @@ class MemoryCache:
             self.load_config(config)
 
     def load_config(self, config):
-        ttl = config.get('ttl', self.ttl)
-        max_size = config.get('max_size', self.max_size)
+        self.ttl = config.get('ttl', self.ttl)
+        self.max_size = config.get('max_size', self.max_size)
         value_type = config.get('value_type', self.value_type)
 
         # Validate TTL and max_size
-        if ttl < 0:
+        if self.ttl < 0:
             print("TTL cannot be negative. Using default TTL.")
-            ttl = self.ttl
-        if max_size < 0:
+            self.ttl = 60  # Default TTL
+        if self.max_size < 0:
             print("Max size cannot be negative. Using default max_size.")
-            max_size = self.max_size
+            self.max_size = 100  # Default max_size
 
         # Get value type
         if isinstance(value_type, type):
@@ -36,9 +36,6 @@ class MemoryCache:
             self.value_type = self.get_type_from_string(value_type)
         else:
             raise ValueError(f"Invalid value type: {value_type}")
-
-        self.ttl = ttl
-        self.max_size = max_size
 
     def get_type_from_string(self, type_str):
         try:
