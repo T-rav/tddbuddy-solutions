@@ -12,7 +12,7 @@ The rover receives a string of commands. Implement commands that:
 - Implement wrapping from one edge of the grid to another (Planets are spheres after all).
 
 ## Hint
-Your constructor should look like: `MarsRover(location, direction, gridSize)`.
+Your constructor should look something like: `MarsRover(location, direction, gridSize)`.
 Example: `var rover = new MarsRover([0,0], 'E', [50,50]);`
 
 ## Example

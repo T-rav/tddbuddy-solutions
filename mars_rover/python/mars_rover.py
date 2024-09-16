@@ -1,47 +1,51 @@
+class Plateau:
+    def __init__(self, max_x, max_y):
+        self.min_x = 0
+        self.min_y = 0
+        self.max_x = max_x
+        self.max_y = max_y
+
 class MarsRover:
-    DIRECTIONS = {'N': (0, -1), 'S': (0, 1), 'E': (-1, 0), 'W': (1, 0)}
-    LEFT_ROTATION = {'N': 'W', 'W': 'S', 'S': 'E', 'E': 'N'}
-    RIGHT_ROTATION = {v: k for k, v in LEFT_ROTATION.items()}
-
-    def __init__(self, location, direction, grid_size):
-        if direction not in self.DIRECTIONS:
-            raise ValueError(f"Invalid direction: {direction}")
-        self.x, self.y = location
-        self.direction = direction
-        self.grid_width, self.grid_height = grid_size
-
-    def move_forward(self):
-        dx, dy = self.DIRECTIONS[self.direction]
-        self.x = (self.x + dx) % self.grid_width
-        self.y = (self.y + dy) % self.grid_height
-
-    def move_backward(self):
-        dx, dy = self.DIRECTIONS[self.direction]
-        self.x = (self.x - dx) % self.grid_width
-        self.y = (self.y - dy) % self.grid_height
+    def __init__(self, x, y, direction, plateau):
+        self.x = x
+        self.y = y
+        self.direction = direction  # N, E, S, W
+        self.plateau = plateau  # Plateau object for boundary checks
 
     def turn_left(self):
-        self.direction = self.LEFT_ROTATION[self.direction]
+        directions = ['N', 'W', 'S', 'E']
+        idx = directions.index(self.direction)
+        self.direction = directions[(idx + 1) % 4]
 
     def turn_right(self):
-        self.direction = self.RIGHT_ROTATION[self.direction]
+        directions = ['N', 'E', 'S', 'W']
+        idx = directions.index(self.direction)
+        self.direction = directions[(idx + 1) % 4]
 
-    def execute_commands(self, commands):
+    def move(self):
+        if self.direction == 'N':
+            if self.y + 1 <= self.plateau.max_y:
+                self.y += 1
+        elif self.direction == 'S':
+            if self.y - 1 >= self.plateau.min_y:
+                self.y -= 1
+        elif self.direction == 'E':
+            if self.x + 1 <= self.plateau.max_x:
+                self.x += 1
+        elif self.direction == 'W':
+            if self.x - 1 >= self.plateau.min_x:
+                self.x -= 1
+
+    def process_commands(self, commands):
         for command in commands:
-            if command == 'f':
-                self.move_forward()
-            elif command == 'b':
-                self.move_backward()
-            elif command == 'l':
+            if command == 'L':
                 self.turn_left()
-            elif command == 'r':
+            elif command == 'R':
                 self.turn_right()
+            elif command == 'M':
+                self.move()
             else:
-                raise ValueError(f"Unknown command {command}")
-        
+                raise ValueError(f"Invalid command: {command}")
 
-    def current_location(self):
-        return (self.x, self.y)
-
-    def current_direction(self):
-        return self.direction
+    def get_position(self):
+        return f"{self.x} {self.y} {self.direction}"
